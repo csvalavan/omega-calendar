@@ -15,7 +15,7 @@ body {
   background-color: #777;
   color: white;
   cursor: pointer;
-  padding: 10px;
+  padding: 8px;
   width: 100%;
   border: none;
   text-align: left;
@@ -52,7 +52,7 @@ body {
   display: block;
   color: black;
   text-align: center;
-  padding: 8px 8px;
+  padding: 6px 8px;
   text-decoration: none;
   font-size: 15px;
 }
@@ -97,17 +97,17 @@ body {
 </head>
 <body>
 
-<button class="collapsible">Lalaji Omega International School</button>
-<div class="content">
-    <select name="className" id="className">
+<button class="collapsible">
+    <select name="className" id="className" onclick="showQueryOut('');">
       <option value="IB YR2 21-22">IB YR2 21-22</option>
       <option value="IB YR1 21-22">IB YR1 21-22</option>
     </select>
-
-  <a onclick="showDetails(this);">All</a>
+</button>
+<div class="content">
+   
   <a onclick="showDetails(this);">Holiday</a>
   <a onclick="showDetails(this);">Exam</a>
-  <a onclick="showDetails(this);">Open Day</a>
+  <a onclick="showDetails(this);">PTM</a>
   <a onclick="showDetails(this);">Today</a>
   <a onclick="showDetails(this);">Tomorrow</a>
   <div class="search-container">
@@ -120,7 +120,7 @@ body {
 
 
 
-<center><embed id="sheetsData" src="" width="80%" height="100%"/></center>
+<center><embed id="sheetsData" src="" width="90%" height="100%"/></center>
 
 <script>
 var coll = document.getElementsByClassName("collapsible");
@@ -158,6 +158,8 @@ function showDetails(node) {
   if(query == "Exam") {
     query = "ut1 .*|.*ut2 .*|.*ut3 .*|.*sa1 .*|.*sa2 .*|.*ut 1 .*|.*ut 2 .*|.*ut 3 .*|.*sa 1 .*|.*sa 2 .*|.*mock.*|.*exam";
   }
+
+  if(query == "PTM") query = "Open Day";
 
 if(query == "Tomorrow") {
   today = new Date();
@@ -202,14 +204,16 @@ function showQueryOut(query, date){
 }
 
 function resize()
-  {
+ {
       var heights = window.innerHeight - 200;
       document.getElementById("sheetsData").style.height = heights + "px";
-  }
+ }
   resize();
   window.onresize = function() {
       resize();
   };
+
+showQueryOut("");
 
 </script>
 
