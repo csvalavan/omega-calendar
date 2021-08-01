@@ -57,12 +57,22 @@ body {
   font-size: 15px;
 }
 
+.content select {
+  float: left;
+  display: block;
+  color: black;
+  text-align: center;
+  padding: 3px 3px;
+  text-decoration: none;
+  font-size: 15px;
+}
+
 .content a:hover {
   background-color: #ddd;
   color: black;
 }
 
-.content a.selected {
+.content a.myactive {
   background-color: #2196F3;
   color: white;
 }
@@ -97,19 +107,18 @@ body {
 </head>
 <body>
 
-<button class="collapsible">
-    <select name="className" id="className" onclick="showQueryOut('');">
+<button class="collapsible" id="selectClass">
+Select a class
+</button>
+<div class="content">
+    <select name="className" id="className" onchange="showQueryOut('');">
       <option value="IB YR2 21-22">IB YR2 21-22</option>
       <option value="IB YR1 21-22">IB YR1 21-22</option>
     </select>
-</button>
-<div class="content">
-   
   <a onclick="showDetails(this);">Holiday</a>
   <a onclick="showDetails(this);">Exam</a>
   <a onclick="showDetails(this);">PTM</a>
-  <a onclick="showDetails(this);">Today</a>
-  <a onclick="showDetails(this);">Tomorrow</a>
+  <a onclick="showDetails(this);">Day</a>
   <div class="search-container">
     
     <input id="textSearch" type="text" size="8" placeholder="Search ..." name="search">
@@ -127,6 +136,8 @@ var coll = document.getElementsByClassName("collapsible");
 var i;
 
 for (i = 0; i < coll.length; i++) {
+  if(coll[i].id == "className") break;
+
   coll[i].addEventListener("click", function() {
     this.classList.toggle("active");
     var content = this.nextElementSibling;
@@ -143,14 +154,15 @@ function search() {
 }
 
 function clearMenuSelection() {
-   var x = document.getElementsByClassName("selected");
+   var x = document.getElementsByClassName("myactive");
    if(x[0]) x[0].className = "";
  }
 
+
 function showDetails(node) {
   clearMenuSelection();
-  node.className = "selected";
-  var today = null;
+  node.className = "myactive";
+  
 
   var query = node.text;
   if(query == "All") query = "";
@@ -161,35 +173,38 @@ function showDetails(node) {
 
   if(query == "PTM") query = "Open Day";
 
-if(query == "Tomorrow") {
-  today = new Date();
-  today.setDate(today.getDate()+1);
-}
 
-if(query == "Today") {
-    today = new Date();
-}
 
-if(today != null) {
-    var dd = today.getDate();
+if(query == "Day") {
+    var today = new Date();
+    var tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate()+1);
 
-    var mm = today.getMonth()+1; 
-    var yyyy = today.getFullYear();
-    if(dd<10) dd='0'+dd; 
-    if(mm<10) mm='0'+mm;
-    today = yyyy+'-'+mm+'-'+dd;
-
-    return showQueryOut("", today);
+    return showQueryOut("", convertDate(today), convertDate(tomorrow));
   }
+
   showQueryOut(query);
 }
 
-function showQueryOut(query, date){
+function convertDate(date) {
+    var dd = date.getDate();
+    var mm = date.getMonth()+1; 
+    var yyyy = date.getFullYear();
+    if(dd<10) dd='0'+dd; 
+    if(mm<10) mm='0'+mm;
+    date = yyyy+'-'+mm+'-'+dd;
+
+    return date;
+
+}
+
+function showQueryOut(query, starDate, endDate){
   var className = document.getElementById("className").value;
+  document.getElementById("selectClass").innerHTML = "Selected Class: "+className;
   var sheetsURL = "https://docs.google.com/spreadsheets/d/1WsI0Mk3TohGzzP_LiUUxB6cQU-mzOEMTWjWr6QJHfyE/gviz/tq?tqx=out:html";
   var tq = "&tq";
   
-  if(date != null) tq = tq +"="+encodeURIComponent("SELECT A, B, C, D, E WHERE A = date '"+date+"'");
+  if(starDate != null) tq = tq +"="+encodeURIComponent("SELECT A, B, C, D, E WHERE A >= date '"+starDate+"' AND A <= date '"+endDate+"'");
   else tq = tq+"="+encodeURIComponent("SELECT A, B, C, D, E WHERE LOWER(C) MATCHES '.*"+query.toLowerCase()+".*'");
 
   
@@ -200,7 +215,8 @@ function showQueryOut(query, date){
   clone.setAttribute('src',sheetsURL);
   console.log(sheetsURL);
 
-  display.parentNode.replaceChild(clone,display)
+  display.parentNode.replaceChild(clone,display);
+  prevClassName = className;
 }
 
 function resize()
@@ -212,6 +228,7 @@ function resize()
   window.onresize = function() {
       resize();
   };
+
 
 showQueryOut("");
 
