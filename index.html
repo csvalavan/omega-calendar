@@ -204,8 +204,8 @@ function showQueryOut(query, starDate, endDate){
   var sheetsURL = "https://docs.google.com/spreadsheets/d/1WsI0Mk3TohGzzP_LiUUxB6cQU-mzOEMTWjWr6QJHfyE/gviz/tq?tqx=out:html";
   var tq = "&tq";
   
-  if(starDate != null) tq = tq +"="+encodeURIComponent("SELECT A, B, C, D, E WHERE A >= date '"+starDate+"' AND A <= date '"+endDate+"'");
-  else tq = tq+"="+encodeURIComponent("SELECT A, B, C, D, E WHERE LOWER(C) MATCHES '.*"+query.toLowerCase()+".*'");
+  if(starDate != null) tq = tq +"="+encodeURIComponent("SELECT A, B, C, E WHERE A >= date '"+starDate+"' AND A <= date '"+endDate+"'");
+  else tq = tq+"="+encodeURIComponent("SELECT A, B, C, E WHERE LOWER(C) MATCHES '.*"+query.toLowerCase()+".*'");
 
   
   var sheetName = "&sheet='"+className+"'";
