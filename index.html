@@ -122,7 +122,7 @@ body {
 
 
 
-<center><embed id="sheetsData" src="" width="80%" height="1000"/></center>
+<center><embed id="sheetsData" src="" width="80%" height="100%"/></center>
 
 
 
@@ -204,6 +204,17 @@ function showQueryOut(query, date){
 
   display.parentNode.replaceChild(clone,display)
 }
+
+function resize()
+  {
+      var heights = window.innerHeight - 200;
+      document.getElementById("sheetsData").style.height = heights + "px";
+  }
+  resize();
+  window.onresize = function() {
+      resize();
+  };
+
 </script>
 
 </body>
